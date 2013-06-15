@@ -48,7 +48,7 @@ $ git checkout release
 $
 ```
 
-At this point you are ready to build the basic Subsonic WAR. The maintainer of this repository does not use any of the other build targets(Windows EXE installer, Android app, standalone RPM, etc), and no documentation is provided for them(Pull Requests welcomed).
+At this point you are ready to build the basic Subsonic WAR. The maintainer of this repository does not use any of the other build targets (Windows EXE installer, Android app, standalone RPM, etc), and documentation for them is only provided as contributed by others (Pull Requests welcomed).
 
 ```
 $ mvn package
@@ -58,11 +58,23 @@ $ mvn package
 $
 ```
 
+### Instructions for Tomcat
+
 You can now copy this WAR into your Tomcat server's webapps/ directory and deploy it from the Tomcat Manager. If you are feeling adventurous you can attempt to install the Official Subsonic Windows application and then switch the provided WAR with the one you just built(or grabbed from the [Downloads page](https://github.com/KHresearch/subsonic/downloads)).
 
 ```
 $ cp subsonic-main/target/subsonic.war /var/lib/tomcat6/webapps/
 $
+```
+
+### Instruction for building a package for Debian and Ubuntu
+
+The following commands will build and install Subsonic on Debian and Ubuntu. You can probably substitute rpm for debian and the corresponding rpm installing command on rpm-based systems.
+
+```
+$ mvn -P full -pl subsonic-booter -am install
+$ mvn -P full -pl subsonic-installer-debian/ -am install
+$ sudo dpkg -i ./subsonic-installer-debian/target/subsonic-*.deb
 ```
 
 Good luck!
