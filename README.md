@@ -26,6 +26,11 @@ This repository is maintained by [K and H Research Company](https://khresear.ch)
 
 The official homepage of Subsonic can be found [here](http://www.subsonic.org/).
 
+Download
+--------
+
+A WAR of the latest tag is provided on the [Releases page](https://github.com/KHresearch/subsonic/releases), which can be installed to a Tomcat webapps/ directory, and should "just work". If you wish, you can build Subsonic from these sources for yourself by playing along with the following instructions.
+
 Building
 --------
 
@@ -60,7 +65,7 @@ $
 
 ### Instructions for Tomcat
 
-You can now copy this WAR into your Tomcat server's webapps/ directory and deploy it from the Tomcat Manager. If you are feeling adventurous you can attempt to install the Official Subsonic Windows application and then switch the provided WAR with the one you just built(or grabbed from the [Downloads page](https://github.com/KHresearch/subsonic/downloads)).
+You can now copy this WAR into your Tomcat server's webapps/ directory and deploy it from the Tomcat Manager. If you are feeling adventurous you can attempt to install the Official Subsonic Windows application and then switch the provided WAR with the one you just built, but the author has not attempted this.
 
 ```
 $ cp subsonic-main/target/subsonic.war /var/lib/tomcat6/webapps/
