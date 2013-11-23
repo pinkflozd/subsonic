@@ -8,7 +8,7 @@
 
 <h1>
     <img src="<spring:theme code="donateImage"/>" alt=""/>
-    <fmt:message key="premium.title"/>
+    <span style="vertical-align: middle"><fmt:message key="premium.title"/></span>
 </h1>
 <c:if test="${not empty command.path}">
     <sub:url value="main.view" var="backUrl">
@@ -65,13 +65,13 @@
                 <tr>
                     <td><fmt:message key="premium.register.email"/></td>
                     <td>
-                        <form:input path="licenseInfo.licenseEmail" size="40"/>
+                        <form:input path="licenseInfo.licenseEmail" size="60"/>
                     </td>
                 </tr>
                 <tr>
                     <td><fmt:message key="premium.register.license"/></td>
                     <td>
-                        <form:input path="licenseCode" size="40"/>
+                        <form:input path="licenseCode" size="60"/>
                     </td>
                     <td><input type="submit" value="<fmt:message key="common.ok"/>"/></td>
                 </tr>

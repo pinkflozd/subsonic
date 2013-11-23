@@ -1,43 +1,52 @@
 DONE IN 4.9
 -------------
-New: UPnP
-New: Added "Play next" option.
-New: Updated Estonian translation, courtesy of Olav M&auml;gi.
-REST: Escape special characters in XML for getGenres.
-REST: Added ignoredArticles to getIndexes.
-Bugfix: Improved lyrics search.
-Bugfix: Trim license key when registering.
-Bugfix: Fix download file names with special characters.
-Bugfix: Don't create a new player for each download.
-Tech: Make Subsonic work on Tomcat 7.
-Tech: Increased limit of internal database from 2 to 8 GB (fresh installs only).
-Tech: Set MIME type for cover arts.
-Security: Added CAPTCHA to password recovery page.
+Bugfix: Playlist management was broken when deploying on Tomcat 7.
+Make license key field longer
+When clicking "Create new playlist", automatically show all.
+Use javascript to set css class in menu.
+Simplified/improved top.jsp
+Use Roboto font.
+Larger album arts
 
 TODO IN 4.9
 --------------
-update changelog
-When playing a single song, also queue rest of album.
-Reimplement upload files.
-Update site
-UPnP
-Document %o, %d, %w, %h in transcoding page
-Make jukebox premium?
-Upgrade wipes settings on Ubuntu 12.04
-  https://mail.google.com/mail/ca/u/0/?shva=1#inbox/13fc338d71000ac5
-Fedora 19 problem
-  https://mail.google.com/mail/ca/u/0/?ui=2&shva=1#inbox/13f875e94e77b3c4
-RedirectionManagementController should treat email address case insensitive.
-Retain service when upgrading.
-  https://mail.google.com/mail/u/0/#inbox/13e419b5ff8ecb59
-  Document how to modify Windows service to see network drives
-Uninstaller: Optionally delete all settings.
+home.jsp responsive design
+   http://sourceforge.net/p/subsonic/patches/18/
+Remove Player > Album art size
+Use larger album art in main.jsp (if only one image)
+Right-top align album art
+Don't let album art push combo box down.
+Test new top.jsp in IE etc.
+Show 20 albums by default.
 
+Make more space available on forum server.
+Deal with backup server. Document procedure for swapping over. Invoice notice.
+Gradient background in top.jsp (similar to subsonic.org)
+Update screenshots
+Update jw player?
+Rethink playAddDownload buttons.
+Review icons.
+  Remove Now playing?
+  Smaller premium icon (from svg)
+From forum:
+ - music track items are missing <upnp:albumArtURI>, thus will not show covers in most control points
+ - duration attribute of <res> elements is not valid: for example "5:30" should be "0:05:30.000"
+
+AppEngine
+  Specify java version in pom.
+
+SubsonicFX client
+  Skattefunn 2015
+DLNA
+  Playlist support
+  http://www.upnp-database.info/device.jsp
+  http://upnp.org/specs/av/UPnP-av-ContentDirectory-v1-Service.pdf
+Publish on Mac app store
+
+Shuffle play
+Dont use <div/>
 REST video subtitle support
   https://sites.google.com/site/mxvpen/api
-Move xsd and xml examples to site.
-  Create links to each version
-
 Recently added broken
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=11955&p=55889#p55889
 https port 8080 redirect to 8443 (jetty?)
@@ -168,7 +177,6 @@ ffmpeg processes not stopped in opera.
 Sharing (facebook, twitter++)
   Test video sharing
   Add some space towards bottom of main.jsp
-  todos in externalplayer.jsp
   Make it work if no songs are selected
   https://mail.google.com/a/activeobjects.no/#inbox/12ded75e94256283
 Add "append" parameter to createPlaylist REST method. (or create appendPlaylist method)
@@ -190,26 +198,32 @@ Subsonic for Boxee
 Linux locale issue
   http://www.activeobjects.no/subsonic/forum/viewtopic.php?p=22386#22386
 
-DONE IN ANDROID 3.8
+DONE IN ANDROID 4.1
 --------------------
-Fixed illegal xml in french locale.
-Send com.android.music.metachanged intent.
 
-TODO IN ANDROID 3.8
+TODO IN ANDROID 4.1
 --------------------
-Support dynamic number of servers.
+Gradle
+Star status not updated in DownloadActivity.
+Slow song switching?
+  https://mail.google.com/mail/u/0/#inbox/1424e3567ded0b6d
+
+Amazon free app of the day
+  https://mail.google.com/mail/ca/u/0/#inbox/1422d6f137c63319
+Skipping problem solved in Dsub.
+Review context menu visibility.
+Make com.android.music.metachanged work.
+
+Add more EQ options
+Google Cast
+  https://developers.google.com/cast/
+  https://developers.google.com/cast/cast_2nd-screen_app_tutorial
+
 Problem with shuffle + offline
   https://mail.google.com/mail/ca/u/0/#inbox/13b6b172df46f25d
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/13f324a7ec6654c8
 RC volume
   https://mail.google.com/mail/ca/u/0/#inbox/13b3fe25a8b5d8ee
-Lock screen controls
-Notification controls
-Notification
-  progress
-  compat lib
-Run CacheCleaner in bg, see dsub
-Starring support
 Podcast support
 Audio focus
   https://mail.google.com/mail/u/0/?tab=cm#inbox/13a5993b0b420581
@@ -218,7 +232,6 @@ Add option to delete file. (Rename to "Remove from playlist").
 Add to playlist
 Test on Android 2 and 3.
   Notification icon too big and bright.
-Poor quality of album art in album header?
 
 Review patches for AVRCP and lockscreen controls
   https://sourceforge.net/p/subsonic/patches/9/
@@ -228,10 +241,7 @@ Use GridView to show albums.
 
 Subphonic
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=9864
-New minimum Android version: 2.1
 HLS video.
-Music controls in notification.
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/136242ab25baddad
 Update artist list in background.
 
 Sleep timer.
@@ -239,8 +249,6 @@ Maintain track order for offline files.
 Check for lingering .partial files.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 Don't pause on incoming call if RC.
-PayPal integration
-  https://www.x.com/developers/paypal/products/mobile-payment-libraries
 Change generic album art.
 In ICS, doesn't pause when disconnected from Bluetooth.
 Bug if switching to RC and back for a song that is currently downloading.
@@ -649,7 +657,6 @@ Avoid logging of DWR stuff. Add logging from Subsonic service.
 Create tutorial of how to build from source.
 Set multiple icons when using Java 6(?)
 Show who played a track last. http://www.activeobjects.no/subsonic/forum/viewtopic.php?t=1404
-Permalink support?
 Support "play more random songs" if web player.
 After logon, go to originally requested page.
 Fix broken SSL, http://www.activeobjects.no/subsonic/forum/viewtopic.php?t=1301
@@ -684,7 +691,6 @@ Use em instead of pt when padding.
 Random radio mode (http://www.activeobjects.no/subsonic/forum/viewtopic.php?t=964)
 Option for unlimited download/upload if on LAN.  Remember to support proxies.
 Integrate with Amazon mp3.
-Make some features available to donors only.
 Caching bug, selected music folder.  At least in IE and FF.
 RejectedExecutionHandler handling in ThreadPoolExecutor constructor.
 Precompile JSPs for Dekoh. Separate modules "subsonic-precompiled-jetty" and "subsonic-precompiled-dekoh".
@@ -826,9 +832,9 @@ cd subsonic-assembly; mvn assembly:assembly; cd ..
 Deploy
 Check that correct local version is displayed.
 Upload files to SourceForge (in separate shell, REMEMBER TO CHANGE VERSION BELOW).
-  rsync -avP -e ssh subsonic-installer-windows/target/subsonic*-setup.exe  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.8/
-  rsync -avP -e ssh subsonic-assembly/target/subsonic* sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.8/
-  rsync -avP -e ssh subsonic-installer-mac/target/subsonic*.pkg subsonic-installer-debian/target/subsonic*.deb subsonic-installer-rpm/target/subsonic*.rpm sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.8/
+  rsync -avP -e ssh subsonic-installer-windows/target/subsonic*-setup.exe  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.9.beta2/
+  rsync -avP -e ssh subsonic-assembly/target/subsonic* sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.9.beta2/
+  rsync -avP -e ssh subsonic-installer-mac/target/subsonic*.pkg subsonic-installer-debian/target/subsonic*.deb subsonic-installer-rpm/target/subsonic*.rpm sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.9.beta2/
 
 Modify FRS properties
   https://sourceforge.net/projects/subsonic/files/subsonic/
@@ -839,27 +845,28 @@ Upload site (OLD):
 Upload site (NEW):
   rsync -avP -e ssh --exclude ".*" subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps/pages/
 
-svn copy svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/tags/release-4.8 -m "Tagging 4.8"
+svn copy svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/tags/release-4.9.beta2 -m "Tagging 4.9.beta2"
 Register at freshmeat.
 Post message on forum.
 Update version number in pom.xml etc.
 Take backup of forum.
 
+subsonic.org: 66.49.215.227
 Upgrade Subsonic backend: CHANGE DATE BELOW
   Backup backend database.
     Checkpoint database (db.view)
     cd /var/subsonic-backend
-    tar cvf db-backup-2013-04-16.tar db
+    tar cvf db-backup-2013-11-17.tar db
   cd subsonic-backend
   mvn clean install
 
-  mkdir /usr/local/jakarta/tomcat/webapps-2013-04-16/
+  mkdir /usr/local/jakarta/tomcat/webapps-2013-11-17/
 
-  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-04-16/ROOT.war
-  scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-04-16/demo.war
-  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-04-16/pages
+  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-11-17/ROOT.war
+  scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-11-17/demo.war
+  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-11-17/pages
 
-  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/changelog.jsp  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-04-16/pages
+  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/changelog.jsp  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-11-17/pages
 
   Checkpoint database (db.view)
   ssh root@subsonic.org
@@ -867,7 +874,7 @@ Upgrade Subsonic backend: CHANGE DATE BELOW
   ps -elf | grep jsvc
   /usr/sbin/stoptomcat
   rm webapps
-  ln -s webapps-2013-05-01 webapps
+  ln -s webapps-2013-11-17 webapps
 
   rm -rf work logs/*
   /usr/sbin/starttomcat
@@ -876,14 +883,30 @@ Update backup server
 
 rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps/pages
 
+HOWTO: Enable remote JMX for JVisualVM
+--------------------------------------
+In subsonic.canaca.com:/usr/sbin/starttomcat, add
+        -Dcom.sun.management.jmxremote.port=1212
+        -Dcom.sun.management.jmxremote.ssl=false
+        -Dcom.sun.management.jmxremote.authenticate=true
+Create /usr/local/jdk/jre/lib/management/jmxremote.password, remember to make it root-readable only.
 
 subsonic.org backup
 -------------------
-BudgetVM 192.157.221.124
+BudgetVM 192.157.241.116
 % service tomcat6 stop
 % service tomcat6 start
+/etc/default/tomcat6  (memory settings)
 /etc/tomcat6
 /var/lib/tomcat6
+/usr/share/tomcat6
+
+rm -rf work/Catalina logs/*
+
+scp subsonic-backend/target/subsonic-backend-*.war root@192.157.241.116:/var/lib/tomcat6/webapps-2013-11-17/ROOT.war
+scp subsonic-main/target/subsonic.war              root@192.157.241.116:/var/lib/tomcat6/webapps-2013-11-17/demo.war
+scp subsonic-site/target/subsonic-site-*.war       root@192.157.241.116:/var/lib/tomcat6/webapps-2013-11-17/pages.war
+###rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/var/lib/tomcat6/webapps-2013-11-17/pages
 
 
 HOW TO RELEASE TO ANDROID MARKET
@@ -904,12 +927,11 @@ Update
     https://myapps.developer.motorola.com/
     https://slideme.org/application/subsonic
     http://www.camangimarket.com/index.html
-svn copy svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk/subsonic-android svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/tags/android-release-3.7 -m "Tagging Android 3.7"
+svn copy svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk/subsonic-android svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/tags/android-release-4.1 -m "Tagging Android 4.1"
 Create new directory in FRS
   https://sourceforge.net/projects/subsonic/files/android/
 Upload files to SourceForge (REMEMBER TO CHANGE VERSION BELOW).
-  rsync -avP -e ssh subsonic-android/bin/subsonic-release.apk  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/android/3.7/subsonic-3.7.apk
-  rsync -avP -e ssh subsonic-android/bin/subsonic-release.apk  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/android/3.7/subsonic-3.7-adfree.apk
+  rsync -avP -e ssh subsonic-android/bin/subsonic-release.apk  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/android/4.1/subsonic-4.1.apk
 
 HOW TO RELEASE BLACKBERRY
 ===============================
@@ -942,53 +964,6 @@ wget 'http://localhost:4040/rest/jukeboxControl.view?u=admin&p=admin&v=1.6&c=and
 
 wget 'http://localhost:4040/rest/jukeboxControl.view?u=admin&p=admin&v=1.6&c=android&action=add&id=683a5c6d757369632e6576656e5c4169725c54616c6b69652057616c6b6965202d20323030345c3032202d2043686572727920426c6f73736f6d204769726c2e6d7033&id=683a5c6d757369632e6576656e5c4169725c54616c6b69652057616c6b6965202d20323030345c3039202d2042696f6c6f676963616c2e6d7033' -O -
 wget 'http://localhost:8080/rest/jukeboxControl.view?u=admin&p=admin&v=1.6&c=android&action=add&id=2f55736572732f73696e6472652f4d757369632f44696d6d7520426f726769722f41627261686164616272612f3035202d2044696d6d7520426f726769722e6d7033' -O -
-
-SEARCH
-------
-Calculate artist/album count from cachedArtists/cachedAlbums.
-Replace isFile, isAlbum, isDirectory with one char.
-Test paging.
-Fuzzy search?
-Create development branch
-Create schemas for artist/album/song tables (tmp and master)
-Populate with some dummy data.
-Extract SearchService interface.
-Populate master tables from music_file_info.
-Remove music_file_info table.
-Make ID columns count 1, 2, 3,...
-Implement algorithm for updating tmp-tables on scan.
-
-_artist_
-id
-path
-name
-created
-last_modified
-comment
-
-_album_
-id
-path
-name
-artist
-created
-last_modified
-comment
-play_count
-last_played
-
-_song_
-id
-path
-title
-album
-artist
-year
-genre
-created
-last_modified
-play_count
-last_played
 
 MISCELLANEOUS
 =============

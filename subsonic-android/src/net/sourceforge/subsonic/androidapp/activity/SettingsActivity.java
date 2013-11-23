@@ -18,10 +18,6 @@
  */
 package net.sourceforge.subsonic.androidapp.activity;
 
-import java.io.File;
-import java.net.URL;
-import java.util.List;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -32,10 +28,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceScreen;
-import android.provider.SearchRecentSuggestions;
-import android.util.Log;
 import net.sourceforge.subsonic.androidapp.R;
-import net.sourceforge.subsonic.androidapp.provider.SearchSuggestionProvider;
 import net.sourceforge.subsonic.androidapp.service.DownloadService;
 import net.sourceforge.subsonic.androidapp.service.DownloadServiceImpl;
 import net.sourceforge.subsonic.androidapp.service.MusicService;
@@ -43,13 +36,19 @@ import net.sourceforge.subsonic.androidapp.service.MusicServiceFactory;
 import net.sourceforge.subsonic.androidapp.util.Constants;
 import net.sourceforge.subsonic.androidapp.util.ErrorDialog;
 import net.sourceforge.subsonic.androidapp.util.FileUtil;
+import net.sourceforge.subsonic.androidapp.util.Logger;
 import net.sourceforge.subsonic.androidapp.util.ModalBackgroundTask;
 import net.sourceforge.subsonic.androidapp.util.ServerSettingsManager;
 import net.sourceforge.subsonic.androidapp.util.Util;
 
+import java.io.File;
+import java.net.URL;
+import java.util.List;
+
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final String TAG = SettingsActivity.class.getSimpleName();
+    private static final Logger LOG = new Logger(SettingsActivity.class);
+
     private boolean testingConnection;
     private ListPreference videoPlayer;
     private ListPreference maxBitrateWifi;
@@ -74,16 +73,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
         createServerSettings();
 
-        findPreference("clearSearchHistory").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                SearchRecentSuggestions suggestions = new SearchRecentSuggestions(SettingsActivity.this, SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE);
-                suggestions.clearHistory();
-                Util.toast(SettingsActivity.this, R.string.settings_search_history_cleared);
-                return false;
-            }
-        });
-
         SharedPreferences prefs = Util.getPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
 
@@ -91,7 +80,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
     private void createServerSettings() {
-        PreferenceCategory serverCategory = (PreferenceCategory)findPreference("servers");
+        PreferenceCategory serverCategory = (PreferenceCategory) findPreference("servers");
         serverCategory.removeAll();
 
         List<ServerSettingsManager.ServerSettings> servers = serverSettingsManager.getAllServers();
@@ -226,16 +215,14 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        Log.d(TAG, "Preference changed: " + key);
+        LOG.debug("Preference changed: " + key);
         update();
 
         if (Constants.PREFERENCES_KEY_HIDE_MEDIA.equals(key)) {
             setHideMedia(sharedPreferences.getBoolean(key, false));
-        }
-        else if (Constants.PREFERENCES_KEY_MEDIA_BUTTONS.equals(key)) {
+        } else if (Constants.PREFERENCES_KEY_MEDIA_BUTTONS.equals(key)) {
             setMediaButtonsEnabled(sharedPreferences.getBoolean(key, true));
-        }
-        else if (Constants.PREFERENCES_KEY_CACHE_LOCATION.equals(key)) {
+        } else if (Constants.PREFERENCES_KEY_CACHE_LOCATION.equals(key)) {
             setCacheLocation(sharedPreferences.getString(key, ""));
         }
     }
@@ -259,11 +246,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         File nomediaDir = new File(FileUtil.getSubsonicDirectory(), ".nomedia");
         if (hide && !nomediaDir.exists()) {
             if (!nomediaDir.mkdir()) {
-                Log.w(TAG, "Failed to create " + nomediaDir);
+                LOG.warn("Failed to create " + nomediaDir);
             }
         } else if (nomediaDir.exists()) {
             if (!nomediaDir.delete()) {
-                Log.w(TAG, "Failed to delete " + nomediaDir);
+                LOG.warn("Failed to delete " + nomediaDir);
             }
         }
         Util.toast(this, R.string.settings_hide_media_toast, false);
@@ -337,7 +324,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
             @Override
             protected void error(Throwable error) {
-                Log.w(TAG, error.toString(), error);
+                LOG.warn(error.toString(), error);
                 new ErrorDialog(SettingsActivity.this, getResources().getString(R.string.settings_connection_failure) +
                         " " + getErrorMessage(error), false);
             }
