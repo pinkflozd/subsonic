@@ -77,6 +77,8 @@ $
 The following commands will build and install Subsonic on Debian and Ubuntu. You can probably substitute rpm for debian and the corresponding rpm installing command on rpm-based systems.
 
 ```
+$ sudo apt-get install openjdk-6-jdk lintian maven
+$ mvn package
 $ mvn -P full -pl subsonic-booter -am install
 $ mvn -P full -pl subsonic-installer-debian/ -am install
 $ sudo dpkg -i ./subsonic-installer-debian/target/subsonic-*.deb
