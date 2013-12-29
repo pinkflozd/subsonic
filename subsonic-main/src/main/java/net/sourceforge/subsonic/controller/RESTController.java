@@ -18,6 +18,28 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.ajax.ChatService;
 import net.sourceforge.subsonic.ajax.LyricsInfo;
@@ -31,6 +53,7 @@ import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.Artist;
 import net.sourceforge.subsonic.domain.Bookmark;
+import net.sourceforge.subsonic.domain.Genre;
 import net.sourceforge.subsonic.domain.InternetRadio;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
@@ -63,27 +86,9 @@ import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.ShareService;
 import net.sourceforge.subsonic.service.StatusService;
 import net.sourceforge.subsonic.service.TranscodingService;
+import net.sourceforge.subsonic.util.Pair;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.XMLBuilder;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import static net.sourceforge.subsonic.security.RESTRequestParameterProcessingFilter.decrypt;
 import static net.sourceforge.subsonic.util.XMLBuilder.Attribute;
@@ -132,6 +137,19 @@ public class RESTController extends MultiActionController {
     private ArtistDao artistDao;
     private AlbumDao albumDao;
     private BookmarkDao bookmarkDao;
+
+    private final Map<BookmarkKey, Bookmark> bookmarkCache = new ConcurrentHashMap<BookmarkKey, Bookmark>();
+
+    public void init() {
+        refreshBookmarkCache();
+    }
+
+    private void refreshBookmarkCache() {
+        bookmarkCache.clear();
+        for (Bookmark bookmark : bookmarkDao.getBookmarks()) {
+            bookmarkCache.put(BookmarkKey.forBookmark(bookmark), bookmark);
+        }
+    }
 
     public void ping(HttpServletRequest request, HttpServletResponse response) throws Exception {
         XMLBuilder builder = createXMLBuilder(request, response, true).endAll();
@@ -245,8 +263,10 @@ public class RESTController extends MultiActionController {
 
         builder.add("genres", false);
 
-        for (String genre : mediaFileDao.getGenres()) {
-            builder.add("genre", (Iterable<Attribute>) null, genre, true);
+        for (Genre genre : mediaFileDao.getGenres(false)) {
+            List<Attribute> attrs = Arrays.asList(new Attribute("songCount", genre.getSongCount()),
+                    new Attribute("albumCount", genre.getAlbumCount()));
+            builder.add("genre", attrs, genre.getName(), true);
         }
         builder.endAll();
         response.getWriter().print(builder);
@@ -355,6 +375,8 @@ public class RESTController extends MultiActionController {
         attributes.add("duration", album.getDurationSeconds());
         attributes.add("created", StringUtil.toISO8601(album.getCreated()));
         attributes.add("starred", StringUtil.toISO8601(albumDao.getAlbumStarredDate(album.getId(), username)));
+        attributes.add("year", album.getYear());
+        attributes.add("genre", album.getGenre());
 
         return attributes;
     }
@@ -854,30 +876,34 @@ public class RESTController extends MultiActionController {
         size = Math.max(0, Math.min(size, 500));
         String type = getRequiredStringParameter(request, "type");
 
-        List<HomeController.Album> albums;
+        List<MediaFile> albums;
         if ("highest".equals(type)) {
-            albums = homeController.getHighestRated(offset, size);
+            albums = ratingService.getHighestRatedAlbums(offset, size);
         } else if ("frequent".equals(type)) {
-            albums = homeController.getMostFrequent(offset, size);
+            albums = mediaFileService.getMostFrequentlyPlayedAlbums(offset, size);
         } else if ("recent".equals(type)) {
-            albums = homeController.getMostRecent(offset, size);
+            albums = mediaFileService.getMostRecentlyPlayedAlbums(offset, size);
         } else if ("newest".equals(type)) {
-            albums = homeController.getNewest(offset, size);
+            albums = mediaFileService.getNewestAlbums(offset, size);
         } else if ("starred".equals(type)) {
-            albums = homeController.getStarred(offset, size, username);
+            albums = mediaFileService.getStarredAlbums(offset, size, username);
         } else if ("alphabeticalByArtist".equals(type)) {
-            albums = homeController.getAlphabetical(offset, size, true);
+            albums = mediaFileService.getAlphabeticalAlbums(offset, size, true);
         } else if ("alphabeticalByName".equals(type)) {
-            albums = homeController.getAlphabetical(offset, size, false);
+            albums = mediaFileService.getAlphabeticalAlbums(offset, size, false);
+        } else if ("byGenre".equals(type)) {
+            albums = mediaFileService.getAlbumsByGenre(offset, size, getRequiredStringParameter(request, "genre"));
+        } else if ("byYear".equals(type)) {
+            albums = mediaFileService.getAlbumsByYear(offset, size, getRequiredIntParameter(request, "fromYear"),
+                    getRequiredIntParameter(request, "toYear"));
         } else if ("random".equals(type)) {
-            albums = homeController.getRandom(size);
+            albums = searchService.getRandomAlbums(size);
         } else {
             throw new Exception("Invalid list type: " + type);
         }
 
-        for (HomeController.Album album : albums) {
-            MediaFile mediaFile = mediaFileService.getMediaFile(album.getPath());
-            AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
+        for (MediaFile album : albums) {
+            AttributeSet attributes = createAttributesForMediaFile(player, album, username);
             builder.add("album", attributes, true);
         }
         builder.endAll();
@@ -907,6 +933,11 @@ public class RESTController extends MultiActionController {
             albums = albumDao.getAlphabetialAlbums(offset, size, true);
         } else if ("alphabeticalByName".equals(type)) {
             albums = albumDao.getAlphabetialAlbums(offset, size, false);
+        } else if ("byGenre".equals(type)) {
+            albums = albumDao.getAlbumsByGenre(offset, size, getRequiredStringParameter(request, "genre"));
+        } else if ("byYear".equals(type)) {
+            albums = albumDao.getAlbumsByYear(offset, size, getRequiredIntParameter(request, "fromYear"),
+                    getRequiredIntParameter(request, "toYear"));
         } else if ("starred".equals(type)) {
             albums = albumDao.getStarredAlbums(offset, size, securityService.getCurrentUser(request).getUsername());
         } else if ("random".equals(type)) {
@@ -1013,6 +1044,8 @@ public class RESTController extends MultiActionController {
         attributes.add("artist", mediaFile.getArtist());
         attributes.add("isDir", mediaFile.isDirectory());
         attributes.add("coverArt", findCoverArt(mediaFile, parent));
+        attributes.add("year", mediaFile.getYear());
+        attributes.add("genre", mediaFile.getGenre());
         attributes.add("created", StringUtil.toISO8601(mediaFile.getCreated()));
         attributes.add("starred", StringUtil.toISO8601(mediaFileDao.getMediaFileStarredDate(mediaFile.getId(), username)));
         attributes.add("userRating", ratingService.getRatingForUser(username, mediaFile));
@@ -1023,8 +1056,6 @@ public class RESTController extends MultiActionController {
             attributes.add("bitRate", mediaFile.getBitRate());
             attributes.add("track", mediaFile.getTrackNumber());
             attributes.add("discNumber", mediaFile.getDiscNumber());
-            attributes.add("year", mediaFile.getYear());
-            attributes.add("genre", mediaFile.getGenre());
             attributes.add("size", mediaFile.getFileSize());
             String suffix = mediaFile.getFormat();
             attributes.add("suffix", suffix);
@@ -1032,7 +1063,12 @@ public class RESTController extends MultiActionController {
             attributes.add("isVideo", mediaFile.isVideo());
             attributes.add("path", getRelativePath(mediaFile));
 
-            if (mediaFile.getArtist() != null && mediaFile.getAlbumName() != null) {
+            Bookmark bookmark = bookmarkCache.get(new BookmarkKey(username, mediaFile.getId()));
+            if (bookmark != null) {
+                attributes.add("bookmarkPosition", bookmark.getPositionMillis());
+            }
+
+            if (mediaFile.getAlbumArtist() != null && mediaFile.getAlbumName() != null) {
                 Album album = albumDao.getAlbum(mediaFile.getAlbumArtist(), mediaFile.getAlbumName());
                 if (album != null) {
                     attributes.add("albumId", album.getId());
@@ -1089,6 +1125,9 @@ public class RESTController extends MultiActionController {
             String folderPath = musicFolder.getPath().getPath();
             folderPath = folderPath.replace('\\', '/');
             String folderPathLower = folderPath.toLowerCase();
+            if (!folderPathLower.endsWith("/")) {
+                folderPathLower += "/";
+            }
 
             if (filePathLower.startsWith(folderPathLower)) {
                 String relativePath = filePath.substring(folderPath.length());
@@ -1442,6 +1481,7 @@ public class RESTController extends MultiActionController {
 
         Bookmark bookmark = new Bookmark(0, mediaFileId, position, username, comment, now, now);
         bookmarkDao.createOrUpdateBookmark(bookmark);
+        refreshBookmarkCache();
         XMLBuilder builder = createXMLBuilder(request, response, true).endAll();
         response.getWriter().print(builder);
     }
@@ -1453,6 +1493,7 @@ public class RESTController extends MultiActionController {
         String username = securityService.getCurrentUsername(request);
         int mediaFileId = getRequiredIntParameter(request, "id");
         bookmarkDao.deleteBookmark(username, mediaFileId);
+        refreshBookmarkCache();
 
         builder.endAll();
         response.getWriter().print(builder);
@@ -2131,6 +2172,16 @@ public class RESTController extends MultiActionController {
 
         public String getMessage() {
             return message;
+        }
+    }
+
+    private static class BookmarkKey extends Pair<String, Integer> {
+        private BookmarkKey(String username, int mediaFileId) {
+            super(username, mediaFileId);
+        }
+
+        static BookmarkKey forBookmark(Bookmark b) {
+            return new BookmarkKey(b.getUsername(), b.getMediaFileId());
         }
     }
 }

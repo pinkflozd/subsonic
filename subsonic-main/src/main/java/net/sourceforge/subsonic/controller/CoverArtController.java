@@ -18,21 +18,19 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.AlbumDao;
+import net.sourceforge.subsonic.dao.ArtistDao;
+import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.domain.Artist;
+import net.sourceforge.subsonic.domain.CoverArtScheme;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
+import net.sourceforge.subsonic.util.FileUtil;
+import net.sourceforge.subsonic.util.StringUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -42,18 +40,18 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.mvc.LastModified;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.dao.AlbumDao;
-import net.sourceforge.subsonic.dao.ArtistDao;
-import net.sourceforge.subsonic.domain.Album;
-import net.sourceforge.subsonic.domain.Artist;
-import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.service.MediaFileService;
-import net.sourceforge.subsonic.service.SecurityService;
-import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
-import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.StringUtil;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Controller which produces cover art images.
@@ -102,10 +100,10 @@ public class CoverArtController implements Controller, LastModified {
             return null;
         }
 
-        // Send default image if no path is given. (No need to cache it, since it will be cached in browser.)
+        // Send default image if no ID is given. (No need to cache it, since it will be cached in browser.)
         Integer size = ServletRequestUtils.getIntParameter(request, "size");
         if (file == null) {
-            sendDefault(size, response);
+            sendDefault(size, request, response);
             return null;
         }
 
@@ -120,7 +118,7 @@ public class CoverArtController implements Controller, LastModified {
             File cachedImage = getCachedImage(file, size);
             sendImage(cachedImage, response);
         } catch (IOException e) {
-            sendDefault(size, response);
+            sendDefault(size, request, response);
         }
 
         return null;
@@ -128,18 +126,17 @@ public class CoverArtController implements Controller, LastModified {
 
     private File getImageFile(HttpServletRequest request) {
         String id = request.getParameter("id");
-        if (id != null) {
-            if (id.startsWith(ALBUM_COVERART_PREFIX)) {
-                return getAlbumImage(Integer.valueOf(id.replace(ALBUM_COVERART_PREFIX, "")));
-            }
-            if (id.startsWith(ARTIST_COVERART_PREFIX)) {
-                return getArtistImage(Integer.valueOf(id.replace(ARTIST_COVERART_PREFIX, "")));
-            }
-            return getMediaFileImage(Integer.valueOf(id));
+        if (id == null) {
+            return null;
         }
 
-        String path = StringUtils.trimToNull(request.getParameter("path"));
-        return path != null ? new File(path) : null;
+        if (id.startsWith(ALBUM_COVERART_PREFIX)) {
+            return getAlbumImage(Integer.valueOf(id.replace(ALBUM_COVERART_PREFIX, "")));
+        }
+        if (id.startsWith(ARTIST_COVERART_PREFIX)) {
+            return getArtistImage(Integer.valueOf(id.replace(ARTIST_COVERART_PREFIX, "")));
+        }
+        return getMediaFileImage(Integer.valueOf(id));
     }
 
     private File getArtistImage(int id) {
@@ -167,8 +164,37 @@ public class CoverArtController implements Controller, LastModified {
         }
     }
 
-    private void sendDefault(Integer size, HttpServletResponse response) throws IOException {
-        response.setContentType(StringUtil.getMimeType("jpeg"));
+    private void sendDefault(Integer size, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            MediaFile mediaFile = mediaFileService.getMediaFile(id);
+            sendAutoGenerated(size, mediaFile, response);
+        } catch (Throwable x) {
+            sendFallback(size, response);
+        }
+    }
+
+    private void sendAutoGenerated(Integer size, MediaFile mediaFile, HttpServletResponse response) throws IOException {
+        if (mediaFile.isFile()) {
+            mediaFile = mediaFileService.getParentOf(mediaFile);
+        }
+        if (size == null) {
+            size = CoverArtScheme.MEDIUM.getSize() * 2;
+        }
+        BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D graphics = image.createGraphics();
+        AutoCover autoCover = new AutoCover(graphics, mediaFile, size);
+        autoCover.paintCover();
+        graphics.dispose();
+
+        response.setContentType(StringUtil.getMimeType("png"));
+        ImageIO.write(image, "png", response.getOutputStream());
+    }
+
+    private void sendFallback(Integer size, HttpServletResponse response) throws IOException {
+        if (response.getContentType() == null) {
+            response.setContentType(StringUtil.getMimeType("jpeg"));
+        }
         InputStream in = null;
         try {
             in = getClass().getResourceAsStream("default_cover.jpg");
@@ -301,5 +327,61 @@ public class CoverArtController implements Controller, LastModified {
 
     public void setAlbumDao(AlbumDao albumDao) {
         this.albumDao = albumDao;
+    }
+
+    static class AutoCover {
+
+        private final static int[] COLORS = {0x33B5E5, 0xAA66CC, 0x99CC00, 0xFFBB33, 0xFF4444};
+        private final Graphics2D graphics;
+        private final MediaFile mediaFile;
+        private final int size;
+        private final Color color;
+
+        public AutoCover(Graphics2D graphics, MediaFile mediaFile, int size) {
+            this.graphics = graphics;
+            this.mediaFile = mediaFile;
+            this.size = size;
+
+            int rgb = COLORS[Math.abs(mediaFile.getId()) % COLORS.length];
+            this.color = new Color(rgb);
+        }
+
+        public void paintCover() {
+            graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+            graphics.setPaint(color);
+            graphics.fillRect(0, 0, size, size);
+
+            int y = size * 2 / 3;
+            graphics.setPaint(new GradientPaint(0, y, new Color(82, 82, 82), 0, size, Color.BLACK));
+            graphics.fillRect(0, y, size, size / 3);
+
+            graphics.setPaint(Color.WHITE);
+            float fontSize = 3.0f + size * 0.07f;
+            Font font = new Font(Font.SANS_SERIF, Font.BOLD, (int) fontSize);
+            graphics.setFont(font);
+
+            String album = mediaFile.getAlbumName();
+            if (album != null) {
+                graphics.drawString(album, size * 0.05f, size * 0.6f);
+            }
+            String artist = mediaFile.getAlbumArtist();
+            if (artist == null) {
+                artist = mediaFile.getArtist();
+            }
+            if (artist != null) {
+                graphics.drawString(artist, size * 0.05f, size * 0.8f);
+            }
+
+            int borderWidth = size / 50;
+            graphics.fillRect(0, 0, borderWidth, size);
+            graphics.fillRect(size - borderWidth, 0, size - borderWidth, size);
+            graphics.fillRect(0, 0, size, borderWidth);
+            graphics.fillRect(0, size - borderWidth, size, size);
+
+            graphics.setColor(Color.BLACK);
+            graphics.drawRect(0, 0, size - 1, size - 1);
+        }
     }
 }

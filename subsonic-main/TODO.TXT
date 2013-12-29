@@ -1,48 +1,77 @@
-DONE IN 4.9
--------------
-Bugfix: Playlist management was broken when deploying on Tomcat 7.
-Make license key field longer
-When clicking "Create new playlist", automatically show all.
-Use javascript to set css class in menu.
-Simplified/improved top.jsp
-Use Roboto font.
-Larger album arts
+DONE IN 4.9.beta3
+-----------------
+Fixed NPE if setting path empty for en existing media folder.
+Show album/song count in genre list.
+REST: Added album/song count in getGenres.
+By genre "R&B" broken.
+Simplify cover art in external player.
+Removed support for "path" parameter in coverArt.view.
+Duplicate ID "duration" in playlist.jsp
+Added "Play next" button to playlist view.
+When playing a song from a playlist, queue other songs in that playlist.
+When playing a song from an album, queue other songs in that album as well, both previous and next.
+Make it possible to create playlist from starred songs.
+Added "Play all" to starred.
+Use locale-specific names for automatically created playlists.
+Use icons for prev/next player controls.
+Support playlist sharing on Facebook etc.
+Clicking on image in "Now playing" shouldn't zoom, but open album page.
+Remove obsolete resource strings.
+Show cover art for starred albums
+Fixed character encoding problems in some translations.
+Show album thumbs in the right order.
 
 TODO IN 4.9
 --------------
-home.jsp responsive design
-   http://sourceforge.net/p/subsonic/patches/18/
-Remove Player > Album art size
-Use larger album art in main.jsp (if only one image)
-Right-top align album art
-Don't let album art push combo box down.
-Test new top.jsp in IE etc.
-Show 20 albums by default.
+Support playlist sharing.
+  Back button should go back to playlist.
+album year/genre should update if songs have changed (same as song count)
+Test: Reverse sieblings and album list.
+Update Norwegian translation
+Zip download problem
+  http://forum.subsonic.org/forum/viewtopic.php?f=2&t=1424&start=15#p59187
+In main.jsp, single songs are downloaded as zip files.
+Thumbs in external player is often missing.
+
+Cache generated album art
+  CoverArtProducer
+    Default, Automatic
+
+TODO IN 5.0
+--------------
+Monitoring with JavaMelody
+Artist art
+  Create collage of album covers?
+  https://mail.google.com/mail/u/0/#inbox/142fa023ce5c40f5
+Update ffmpeg
+  Use mpeg4?
+  https://mail.google.com/mail/u/0/#inbox/142d1b52c5c53ff1
+Add browser notification
+  http://www.paulund.co.uk/html5-notifications
+
+Change logo in forum
+
+java.lang.SecurityException: Access denied to file /Users/sindre
+	at net.sourceforge.subsonic.service.MediaFileService.getMediaFile(MediaFileService.java:98)
+	at net.sourceforge.subsonic.service.MediaFileService.getMediaFile(MediaFileService.java:78)
+	at net.sourceforge.subsonic.service.MediaFileService.getMediaFile(MediaFileService.java:139)
+	at net.sourceforge.subsonic.service.MediaFileService.getParentOf(MediaFileService.java:160)
+	at net.sourceforge.subsonic.service.MediaFileService.getCoverArt(MediaFileService.java:527)
+	at net.sourceforge.subsonic.controller.CoverArtController.getMediaFileImage(CoverArtController.java:155)
+	at net.sourceforge.subsonic.controller.CoverArtController.getImageFile(CoverArtController.java:136)
+	at net.sourceforge.subsonic.controller.CoverArtController.handleRequest(CoverArtController.java:90)
+
+DLNA
+  Make sure sublist works
+  Make sure top-level single files work.
+
+Can't play videos from left.jsp?
+Single songs in left.jsp have wrong v align.
 
 Make more space available on forum server.
 Deal with backup server. Document procedure for swapping over. Invoice notice.
-Gradient background in top.jsp (similar to subsonic.org)
 Update screenshots
-Update jw player?
-Rethink playAddDownload buttons.
-Review icons.
-  Remove Now playing?
-  Smaller premium icon (from svg)
-From forum:
- - music track items are missing <upnp:albumArtURI>, thus will not show covers in most control points
- - duration attribute of <res> elements is not valid: for example "5:30" should be "0:05:30.000"
-
-AppEngine
-  Specify java version in pom.
-
-SubsonicFX client
-  Skattefunn 2015
-DLNA
-  Playlist support
-  http://www.upnp-database.info/device.jsp
-  http://upnp.org/specs/av/UPnP-av-ContentDirectory-v1-Service.pdf
 Publish on Mac app store
-
 Shuffle play
 Dont use <div/>
 REST video subtitle support
@@ -52,14 +81,6 @@ Recently added broken
 https port 8080 redirect to 8443 (jetty?)
 REST: Add getSongs
   https://mail.google.com/mail/u/0/?tab=cm#inbox/13e240db8f93072b
-UPnP
-  DLNA
-    https://github.com/longkerdandy/chii2;cid=1358200757747-963
-    http://4thline.org/projects/mailinglists.html#nabble-td2188762
-    http://4thline.org/projects/mailinglists.html#nabble-td2165790
-  Test on Linux (alternative JDK)
-  Add controls for config
-make menu text more visible
 Clean up podcasts in demo
 Update backup server (after a couple of days)
 Publish blackberry app.
@@ -79,20 +100,6 @@ Samsung tv, new (3450) - Can browse and play music, haven't tested video
 Samsung tv, old (3450) - Can browse, but can't play music.
 PS3 (3450) - Can browse albums
 
-
-  AbstractMediaReceiverRegistrarService
-  MiniDLNA
-    http://minidlna.sourceforge.net/
-  http://4thline.org/projects/cling/
-  Use 2.0?
-  Fails to play nrk podcast.
-  Premium
-  https://github.com/jinzora/jinzora-upnp-bridge/tree/master/src/main
-  https://github.com/jinzora/jinzora-upnp-bridge/blob/master/src/main/java/org/jinzora/upnp/MediaServer.java
-  http://upnp.org/specs/av/UPnP-av-ContentDirectory-v1-Service.pdf
-  Intel UPnP Spy
-    http://software.intel.com/en-us/articles/intel-software-for-upnp-technology-download-tools/#anchor_2
-  SkatteFUNN
   DAAP support.
     https://mail.google.com/mail/u/0/?tab=cm#inbox/13a4690309e4d779
     http://www.activeobjects.no/subsonic/forum/viewtopic.php?t=976
@@ -106,29 +113,22 @@ Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/u/0/?tab=cm#inbox/139e96f97e7c9b09
 S1000 Data file size limit is reached in statement
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=75#p44643 (sent email Sep 7)
-Reconsider album artist.
 Prefill minisub
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1394bd52aaaf4969
 FLAC crashes Flash in Firefox (with server on Linux).
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=10027&p=44673#p44673
 
-
 Postponed:
-  - ConcurrentModificationException
-      https://mail.google.com/mail/u/0/?tab=cm#inbox/13822e43383dca84
   - Add "Force rescan" option.
   - Increase line height in playlist.jsp
   - Rename to play queue in Settings > Player.
   - Show message if no songs are selected when doing add to playlist.
   - Encourage users to save email addresses, also for admin.  Explain why.
   - Update apps to include PlayBook version.
-  - REST: Add example links to demo server.
-  - Eliminate HomeController.Album.
   - Clicking play button on a video podcast doesn't work.
 
 Replace usage of dwr.util and prototype with jquery.
 Handle albums without artist. Don't create them?
-Support comment and ratings for Album table.
 Test getPlaylist vs old-style IDs.
 Fix broken REST scrobbling, as reported by Ben.
 JWPlayer subtitle plugin
@@ -154,18 +154,15 @@ subcl:
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=7897
 Better video quality when sharing
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7646
-Show license details in About.
 Support custom domain name in sharing (Settings > Advanced)
 Rename "offsetSeconds" to "timeOffset" in StreamController, and update API doc.
 Add "byteOffset" parameter as well.
 Add rating attributes to <directory> in getMusicDirectory.
 REST: add method to get everything in search index (binary, compressed)?
 
-Bookmark support (for audiobooks, podcasts)
 Stream from devices
   https://mail.google.com/mail/?shva=1#inbox/13352f77f870eba1
 Go through tracker.
-Does canaca allow outgoing port 4040?
 Recursive getFolders API method?
   https://Smail.google.com/mail/?shva=1#inbox/13090cd32a9922bd
 Checkbox, combobox bg color
@@ -185,8 +182,6 @@ Handle non-square cover art
 Cover arts not always aligned in grid
   https://mail.google.com/a/activeobjects.no/#inbox/12defd71c5d9e916
 Upgrade ffmpeg and support wtv.
-Add browser notification
-  http://www.activeobjects.no/subsonic/forum/viewtopic.php?t=5434&highlight=
 AdMob
 Show library statistics for video.
 Playing only first three seconds of podcast
@@ -203,6 +198,13 @@ DONE IN ANDROID 4.1
 
 TODO IN ANDROID 4.1
 --------------------
+Upgrade to KitKat
+Subsonic Android Not Pausing for Google Voice Typing
+  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/142be82a12741b2ba
+Make older version available. Debug problem with connection errors:
+  https://mail.google.com/mail/ca/u/0/?ui=2&shva=1#inbox/1428e52284bfc9d2
+Make it easier to add server URL.
+Support add to playlist
 Gradle
 Star status not updated in DownloadActivity.
 Slow song switching?
@@ -832,9 +834,21 @@ cd subsonic-assembly; mvn assembly:assembly; cd ..
 Deploy
 Check that correct local version is displayed.
 Upload files to SourceForge (in separate shell, REMEMBER TO CHANGE VERSION BELOW).
-  rsync -avP -e ssh subsonic-installer-windows/target/subsonic*-setup.exe  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.9.beta2/
-  rsync -avP -e ssh subsonic-assembly/target/subsonic* sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.9.beta2/
-  rsync -avP -e ssh subsonic-installer-mac/target/subsonic*.pkg subsonic-installer-debian/target/subsonic*.deb subsonic-installer-rpm/target/subsonic*.rpm sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.9.beta2/
+  rsync -avP -e ssh subsonic-installer-windows/target/subsonic*-setup.exe  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.9.beta3/
+  rsync -avP -e ssh subsonic-assembly/target/subsonic* sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.9.beta3/
+
+On Mac OS:
+  rsync -avP -e ssh subsonic-installer-mac/target/subsonic*.pkg sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.9.beta3/
+
+On VirtualBox Ubuntu
+  svn update
+  mvn clean install -Pfull
+  rsync -avP -e ssh subsonic-installer-debian/target/subsonic*.deb sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.9.beta3/
+
+On VirtualBox Fedora
+  svn update
+  mvn clean install -Pfull
+  rsync -avP -e ssh subsonic-installer-rpm/target/subsonic*.rpm sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.9.beta3/
 
 Modify FRS properties
   https://sourceforge.net/projects/subsonic/files/subsonic/
@@ -845,7 +859,7 @@ Upload site (OLD):
 Upload site (NEW):
   rsync -avP -e ssh --exclude ".*" subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps/pages/
 
-svn copy svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/tags/release-4.9.beta2 -m "Tagging 4.9.beta2"
+svn copy svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/tags/release-4.9.beta3 -m "Tagging 4.9.beta3"
 Register at freshmeat.
 Post message on forum.
 Update version number in pom.xml etc.
@@ -856,17 +870,16 @@ Upgrade Subsonic backend: CHANGE DATE BELOW
   Backup backend database.
     Checkpoint database (db.view)
     cd /var/subsonic-backend
-    tar cvf db-backup-2013-11-17.tar db
+    tar cvf db-backup-2013-12-15.tar db
   cd subsonic-backend
   mvn clean install
 
-  mkdir /usr/local/jakarta/tomcat/webapps-2013-11-17/
+  mkdir /usr/local/jakarta/tomcat/webapps-2013-12-15/
 
-  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-11-17/ROOT.war
-  scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-11-17/demo.war
-  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-11-17/pages
+  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-12-15/ROOT.war
+  scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-12-15/demo.war
+  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-12-15/pages
 
-  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/changelog.jsp  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2013-11-17/pages
 
   Checkpoint database (db.view)
   ssh root@subsonic.org
@@ -874,7 +887,7 @@ Upgrade Subsonic backend: CHANGE DATE BELOW
   ps -elf | grep jsvc
   /usr/sbin/stoptomcat
   rm webapps
-  ln -s webapps-2013-11-17 webapps
+  ln -s webapps-2013-12-15 webapps
 
   rm -rf work logs/*
   /usr/sbin/starttomcat
