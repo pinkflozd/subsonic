@@ -25,7 +25,7 @@
     <sub:param name="id" value="${model.dir.id}"/>
 </sub:url>
 <sub:url value="download.view" var="downloadUrl">
-    <sub:param name="dir" value="${model.dir.path}"/>
+    <sub:param name="id" value="${model.dir.id}"/>
 </sub:url>
 
 <script type="text/javascript" language="javascript">
@@ -42,6 +42,7 @@
 
     <!-- actionSelected() is invoked when the users selects from the "More actions..." combo box. -->
     function actionSelected(id) {
+        var selectedIndexes = getSelectedIndexes();
 
         if (id == "top") {
             return;
@@ -49,11 +50,11 @@
             selectAll(true);
         } else if (id == "selectNone") {
             selectAll(false);
-        } else if (id == "share") {
-            parent.frames.main.location.href = "${shareUrl}&" + getSelectedIndexes();
-        } else if (id == "download") {
+        } else if (id == "share" && selectedIndexes != "") {
+            parent.frames.main.location.href = "${shareUrl}&" + selectedIndexes;
+        } else if (id == "download" && selectedIndexes != "") {
             location.href = "${downloadUrl}&" + getSelectedIndexes();
-        } else if (id == "appendPlaylist") {
+        } else if (id == "appendPlaylist" && selectedIndexes != "") {
             onAppendPlaylist();
         }
         $("#moreActions").prop("selectedIndex", 0);
@@ -184,11 +185,8 @@
     <c:if test="${model.dir.album}">
 
         <c:if test="${model.user.downloadRole}">
-            <sub:url value="download.view" var="downloadUrl">
-                <sub:param name="id" value="${model.dir.id}"/>
-            </sub:url>
             <c:if test="${needSep}">|</c:if>
-            <span class="header"><a href="${downloadUrl}"><fmt:message key="common.download"/></a></span>
+            <span class="header"><a href="${downloadUrl}"><fmt:message key="main.downloadall"/></a></span>
             <c:set var="needSep" value="true"/>
         </c:if>
 
@@ -440,17 +438,16 @@
         <td style="vertical-align: top">
             <c:if test="${model.dir.album}">
                 <select id="moreActions" onchange="actionSelected(this.options[selectedIndex].id);" style="margin-bottom:1.0em">
-                    <option id="top" selected="selected"><fmt:message key="main.more"/></option>
-                    <option style="color:blue;"><fmt:message key="main.more.selection"/></option>
-                    <option id="selectAll">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.more.selectall"/></option>
-                    <option id="selectNone">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.more.selectnone"/></option>
-                    <c:if test="${model.user.shareRole}">
-                        <option id="share">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="main.more.share"/></option>
-                    </c:if>
+                    <option id="top" selected="selected"><fmt:message key="main.more.selection"/></option>
+                    <option id="selectAll">&nbsp;&nbsp;<fmt:message key="playlist.more.selectall"/></option>
+                    <option id="selectNone">&nbsp;&nbsp;<fmt:message key="playlist.more.selectnone"/></option>
                     <c:if test="${model.user.downloadRole}">
-                        <option id="download">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="common.download"/></option>
+                        <option id="download">&nbsp;&nbsp;<fmt:message key="common.download"/></option>
                     </c:if>
-                    <option id="appendPlaylist">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.append"/></option>
+                    <c:if test="${model.user.shareRole}">
+                        <option id="share">&nbsp;&nbsp;<fmt:message key="main.more.share"/></option>
+                    </c:if>
+                    <option id="appendPlaylist">&nbsp;&nbsp;<fmt:message key="playlist.append"/></option>
                 </select>
             </c:if>
         </td>
