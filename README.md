@@ -22,7 +22,7 @@ About
 
 Subsonic is developed by [Sindre Mehus](mailto:sindre@activeobjects.no). He lives in Oslo, Norway and works as a Java software consultant.
 
-This repository is maintained by [K and H Research Company](https://khresear.ch) and provides an unofficial version of Subsonic which does not contain the Licensing code checks present in the official builds. In addition, some minor changes to the repository have been made to assist in the building of a fully-free version for your own use. Any downloads associated with this repo are provided without warranty or guarantee, and your use of such files is at your own risk.
+This repository is maintained by [Eugene E. Kashpureff Jr](mailto:eugene@kashpureff.org) and provides an unofficial version of Subsonic which does not contain the Licensing code checks present in the official builds. In addition, some minor changes to the repository have been made to assist in the building of a fully-free version for your own use. Any downloads associated with this repo are provided without warranty or guarantee, and your use of such files is at your own risk.
 
 The official homepage of Subsonic can be found [here](http://www.subsonic.org/).
 
