@@ -151,6 +151,7 @@ form {
 
 input, select, textarea {
     font-size: 90%;
+    border: 1px solid lightgray;
 }
 
 label {
@@ -184,6 +185,16 @@ img {
     vertical-align: middle;
 }
 
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(128, 128, 128, 0.5);
+    border-radius: 6px;
+}
+
 .header, .headerSelected {
     padding-left: 0.25em;
     padding-right: 0.25em;
@@ -215,16 +226,16 @@ img {
 .back, .forward {
     background-position:center left;
     background-repeat:no-repeat;
-    padding-left: 16px;
+    padding-left: 12px;
     line-height: 16px;
 }
 
 .back {
-    background-image:url("../icons/default_light/back.gif");
+    background-image:url("../icons/default_light/back.png");
 }
 
 .forward {
-    background-image:url("../icons/default_light/forward.gif");
+    background-image:url("../icons/default_light/forward.png");
 }
 
 .albumComment {
@@ -248,6 +259,7 @@ img {
 }
 
 .checkbox {
+    border: 0
 }
 
 /* Table with simple lines between the cells. */
