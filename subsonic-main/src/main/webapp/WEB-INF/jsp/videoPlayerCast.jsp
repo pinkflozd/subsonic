@@ -79,7 +79,7 @@
         this.currentMediaTime = 0;
 
         // @type {Number} A number for current media duration
-        this.currentMediaDuration = ${model.duration};
+        this.currentMediaDuration = ${empty model.duration ? 0: model.duration};
 
         // @type {Boolean} A boolean to stop timer update of progress when triggered by media status event
         this.seekInProgress = false;
@@ -296,7 +296,7 @@
         this.currentMediaOffset = offset;
         this.currentMediaTime = 0;
 
-        var url = "${model.remoteStreamUrl}" + "&maxBitRate=" + ${model.maxBitRate} + "&format=mkv&timeOffset=" + offset;
+        var url = "${model.remoteStreamUrl}" + "&maxBitRate=" + this.getBitRate() + "&format=mkv&timeOffset=" + offset;
         console.log("casting " + url);
         var mediaInfo = new chrome.cast.media.MediaInfo(url);
         mediaInfo.contentType = 'video/x-matroska';
@@ -458,7 +458,7 @@
             this.currentMediaOffset = offset;
             this.currentMediaTime = 0;
 
-            var url = "${model.streamUrl}" + "&maxBitRate=" + ${model.maxBitRate} + "&timeOffset=" + offset;
+            var url = "${model.streamUrl}" + "&maxBitRate=" + this.getBitRate() + "&timeOffset=" + offset;
             console.log("playing local: " + url);
 
             this.localPlayer.load({
@@ -470,6 +470,10 @@
             this.seekInProgress = false;
         }
         this.updateMediaControlUI();
+    };
+
+    CastPlayer.prototype.getBitRate = function () {
+        return $("#bitrate_menu").val();
     };
 
     /**
@@ -489,6 +493,14 @@
                     this.onError.bind(this));
             this.updateMediaControlUI();
         }
+    };
+
+    /**
+     * Changes the bit rate.
+     */
+    CastPlayer.prototype.changeBitRate = function () {
+        // This effectively restarts streaming with the new bit rate.
+        this.seekMedia();
     };
 
     /**
@@ -657,6 +669,7 @@
         $("#audio_off").on('click', this.muteMedia.bind(this));
         $("#play").on('click', this.playMedia.bind(this));
         $("#pause").on('click', this.pauseMedia.bind(this));
+        $("#bitrate_menu").on('change', this.changeBitRate.bind(this));
 
 //        setInterval(this.updateDebug.bind(this), 100);
     };

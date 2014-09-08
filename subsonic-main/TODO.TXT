@@ -1,34 +1,12 @@
 DONE IN 5.0
 -------------
-Slider cursor and animation.
-Bugfix: Access-Control-Allow-Origin header sometimes missing in REST responses.
-Updated Czech translation, courtesy of Trottel
-Make DLNA media server name configurable.
-Fix DLNA recursion
-  https://github.com/daneren2005/Subsonic-Plus/commit/ca8a5345e9819d041f3cc32325dc83d455e2aa6d
-  http://forum.subsonic.org/forum/viewtopic.php?f=2&t=14045
-Fix icons in playlist view.
-Hide player combobox when only one player.
-Fixed mixed content errors when changing cover art, and using https (courtesy of daneren2005)
-Fixed errors on certain podcast feeds where they were being incorrectly labeled as video files (courtesy of daneren2005)
-Bugfix: Updated ffmpeg commands to fix some transcoding issues.
-Enable compression for XML, JSON and JSONP in the REST API
-Fixed bug in REST method changePassword
-Avoid creating duplicate players when switching from cast to local.
-Set X-Content-Duration to support opus encoding
-  https://sourceforge.net/p/subsonic/bugs/122/
 
 TODO IN 5.0
 --------------
-Make chromecast work with *.subsonic.org
-Add new android app
-  https://mail.google.com/mail/ca/u/0/#inbox/146cf3a07a298b6b
-Add bitrate selector?
 Update recommended transcoding settings.
-Test transcoding with chromecast
-Error if unable to determine video duration, e.g., if ffmpeg is not installed.
 Shows extra "|" in movie dir.
-Make it possible to cast from remote server
+Test: Make it possible to cast from remote server
+
 
 Cast
   Update site (premium feature)
@@ -36,7 +14,6 @@ Cast
   (Remote) skipping doesn't always work
   Autoplay locally?
   Proper handling of EOM
-  Test on other browsers
 
 Nicer desktop notification icon on windows.
 Help icon.
@@ -905,23 +882,23 @@ Check that correct local version is displayed.
 Upload files to SourceForge (in separate shell, REMEMBER TO CHANGE VERSION BELOW).
 
 On Mac OS:
-  rsync -avP -e ssh subsonic-assembly/target/subsonic* sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/5.0.beta1/
-  rsync -avP -e ssh subsonic-installer-mac/target/subsonic-*.pkg sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/5.0.beta1/
+  rsync -avP -e ssh subsonic-assembly/target/subsonic* sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/5.0.beta2/
+  rsync -avP -e ssh subsonic-installer-mac/target/subsonic-*.pkg sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/5.0.beta2/
 
 On Windows
-  rsync -avP -e ssh subsonic-installer-windows/target/subsonic*-setup.exe  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/5.0.beta1/
+  rsync -avP -e ssh subsonic-installer-windows/target/subsonic*-setup.exe  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/5.0.beta2/
 
 On VirtualBox Ubuntu
   svn update
   # Ignore build error for subsonic-installer-rpm
   mvn clean install -Pfull,debian
-  rsync -avP -e ssh subsonic-installer-debian/target/subsonic*.deb sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/5.0.beta1/
+  rsync -avP -e ssh subsonic-installer-debian/target/subsonic*.deb sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/5.0.beta2/
   sudo shutdown -h now
 
 On VirtualBox Fedora
   svn update
   mvn clean install -Pfull,rpm
-  rsync -avP -e ssh subsonic-installer-rpm/target/subsonic*.rpm sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/5.0.beta1/
+  rsync -avP -e ssh subsonic-installer-rpm/target/subsonic*.rpm sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/5.0.beta2/
   sudo shutdown -h now
 
 Modify FRS properties
@@ -930,7 +907,7 @@ Modify FRS properties
 Upload site (OLD):
  rsync -avP -e ssh --exclude ".*" subsonic-web/  sindre_mehus,subsonic@web.sourceforge.net:htdocs/
 
-svn copy svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/tags/release-5.0.beta1 -m "Tagging 5.0.beta1"
+svn copy svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/tags/release-5.0.beta2 -m "Tagging 5.0.beta2"
 Post message on forum.
 
 Update subsonic.org (66.49.215.227)
@@ -1000,11 +977,11 @@ Update
     https://myapps.developer.motorola.com/
     https://slideme.org/application/subsonic
     http://www.camangimarket.com/index.html
-svn copy svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk/subsonic-android svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/tags/android-release-4.3.1 -m "Tagging Android 4.3.1"
+svn copy svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk/subsonic-android svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/tags/android-release-4.4 -m "Tagging Android 4.4"
 Create new directory in FRS
   https://sourceforge.net/projects/subsonic/files/android/
 Upload files to SourceForge (REMEMBER TO CHANGE VERSION BELOW).
-  rsync -avP -e ssh subsonic-android/subsonic/build/apk/subsonic-release.apk  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/android/4.3.1/subsonic-4.3.1.apk
+  rsync -avP -e ssh subsonic-android/subsonic/build/apk/subsonic-release.apk  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/android/4.4/subsonic-4.4.apk
 
 HOW TO RELEASE BLACKBERRY
 ===============================
