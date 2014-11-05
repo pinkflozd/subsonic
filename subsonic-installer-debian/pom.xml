@@ -19,7 +19,7 @@
             <id>linux</id>
             <activation>
                 <os>
-                    <family>debian</family>
+                    <family>linux</family>
                 </os>
             </activation>
 
