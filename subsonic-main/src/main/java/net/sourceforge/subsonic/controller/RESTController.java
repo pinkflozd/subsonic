@@ -563,6 +563,7 @@ public class RESTController extends MultiActionController {
         jaxbPlaylist.setSongCount(playlist.getFileCount());
         jaxbPlaylist.setDuration(playlist.getDurationSeconds());
         jaxbPlaylist.setCreated(jaxbWriter.convertDate(playlist.getCreated()));
+        jaxbPlaylist.setCoverArt(CoverArtController.PLAYLIST_COVERART_PREFIX + playlist.getId());
 
         for (String username : playlistService.getPlaylistUsers(playlist.getId())) {
             jaxbPlaylist.getAllowedUser().add(username);
@@ -1031,31 +1032,34 @@ public class RESTController extends MultiActionController {
 
         int size = getIntParameter(request, "size", 10);
         int offset = getIntParameter(request, "offset", 0);
+        Integer musicFolderId = getIntParameter(request, "musicFolderId");
+        MusicFolder musicFolder = musicFolderId == null ? null : settingsService.getMusicFolderById(musicFolderId);
+
         size = Math.max(0, Math.min(size, 500));
         String type = getRequiredStringParameter(request, "type");
 
         List<MediaFile> albums;
         if ("highest".equals(type)) {
-            albums = ratingService.getHighestRatedAlbums(offset, size);
+            albums = ratingService.getHighestRatedAlbums(offset, size, musicFolder);
         } else if ("frequent".equals(type)) {
-            albums = mediaFileService.getMostFrequentlyPlayedAlbums(offset, size);
+            albums = mediaFileService.getMostFrequentlyPlayedAlbums(offset, size, musicFolder);
         } else if ("recent".equals(type)) {
-            albums = mediaFileService.getMostRecentlyPlayedAlbums(offset, size);
+            albums = mediaFileService.getMostRecentlyPlayedAlbums(offset, size, musicFolder);
         } else if ("newest".equals(type)) {
-            albums = mediaFileService.getNewestAlbums(offset, size);
+            albums = mediaFileService.getNewestAlbums(offset, size, musicFolder);
         } else if ("starred".equals(type)) {
-            albums = mediaFileService.getStarredAlbums(offset, size, username);
+            albums = mediaFileService.getStarredAlbums(offset, size, username, musicFolder);
         } else if ("alphabeticalByArtist".equals(type)) {
-            albums = mediaFileService.getAlphabeticalAlbums(offset, size, true);
+            albums = mediaFileService.getAlphabeticalAlbums(offset, size, true, musicFolder);
         } else if ("alphabeticalByName".equals(type)) {
-            albums = mediaFileService.getAlphabeticalAlbums(offset, size, false);
+            albums = mediaFileService.getAlphabeticalAlbums(offset, size, false, musicFolder);
         } else if ("byGenre".equals(type)) {
-            albums = mediaFileService.getAlbumsByGenre(offset, size, getRequiredStringParameter(request, "genre"));
+            albums = mediaFileService.getAlbumsByGenre(offset, size, getRequiredStringParameter(request, "genre"), musicFolder);
         } else if ("byYear".equals(type)) {
             albums = mediaFileService.getAlbumsByYear(offset, size, getRequiredIntParameter(request, "fromYear"),
-                    getRequiredIntParameter(request, "toYear"));
+                    getRequiredIntParameter(request, "toYear"), musicFolder);
         } else if ("random".equals(type)) {
-            albums = searchService.getRandomAlbums(size);
+            albums = searchService.getRandomAlbums(size, musicFolder);
         } else {
             throw new Exception("Invalid list type: " + type);
         }
@@ -1446,7 +1450,7 @@ public class RESTController extends MultiActionController {
         for (MediaFile artist : mediaFileDao.getStarredDirectories(0, Integer.MAX_VALUE, username)) {
             result.getArtist().add(createJaxbArtist(artist, username));
         }
-        for (MediaFile album : mediaFileDao.getStarredAlbums(0, Integer.MAX_VALUE, username)) {
+        for (MediaFile album : mediaFileDao.getStarredAlbums(0, Integer.MAX_VALUE, username, null)) {
             result.getAlbum().add(createJaxbChild(player, album, username));
         }
         for (MediaFile song : mediaFileDao.getStarredFiles(0, Integer.MAX_VALUE, username)) {

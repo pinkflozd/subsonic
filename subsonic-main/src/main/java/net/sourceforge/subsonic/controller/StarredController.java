@@ -58,7 +58,7 @@ public class StarredController extends ParameterizableViewController {
         UserSettings userSettings = settingsService.getUserSettings(username);
 
         List<MediaFile> artists = mediaFileDao.getStarredDirectories(0, Integer.MAX_VALUE, username);
-        List<MediaFile> albums = mediaFileDao.getStarredAlbums(0, Integer.MAX_VALUE, username);
+        List<MediaFile> albums = mediaFileDao.getStarredAlbums(0, Integer.MAX_VALUE, username, null);
         List<MediaFile> songs = mediaFileDao.getStarredFiles(0, Integer.MAX_VALUE, username);
         mediaFileService.populateStarredDate(artists, username);
         mediaFileService.populateStarredDate(albums, username);
@@ -67,10 +67,10 @@ public class StarredController extends ParameterizableViewController {
         map.put("user", user);
         map.put("partyModeEnabled", userSettings.isPartyModeEnabled());
         map.put("player", playerService.getPlayer(request, response));
+        map.put("coverArtSize", CoverArtScheme.MEDIUM.getSize());
         map.put("artists", artists);
         map.put("albums", albums);
         map.put("songs", songs);
-        map.put("coverArtSize", CoverArtScheme.MEDIUM.getSize());
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;
