@@ -7,7 +7,7 @@
 
     <script type="text/javascript" language="javascript">
         function init() {
-            setTimeout("refresh()", 20000);
+            setTimeout("refresh()", 60000);
         }
 
         function refresh() {
