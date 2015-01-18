@@ -33,6 +33,7 @@
 <fmt:message key="top.starred" var="starred"/>
 <fmt:message key="left.playlists" var="playlists"/>
 <fmt:message key="top.settings" var="settings"/>
+<fmt:message key="top.status" var="status" />
 <fmt:message key="top.podcast" var="podcast"/>
 <fmt:message key="top.more" var="more"/>
 <fmt:message key="top.help" var="help"/>
