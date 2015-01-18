@@ -8,11 +8,24 @@
     <script type="text/javascript" language="javascript">
         function init() {
             setTimeout("refresh()", 60000);
+
+            <c:if test="${not model.musicFoldersExist}">
+            $().toastmessage("showNoticeToast", "<fmt:message key="top.missing"/>");
+            </c:if>
+
+            <c:if test="${model.isIndexBeingCreated}">
+            $().toastmessage("showNoticeToast", "<fmt:message key="home.scan"/>");
+            </c:if>
         }
 
         function refresh() {
             top.main.location.href = top.main.location.href;
         }
+
+        function playShuffle() {
+            top.playQueue.onPlayShuffle('${model.listType}', ${model.listOffset}, ${model.listSize}, '${model.genre}', '${model.decade}')
+        }
+
     </script>
 </head>
 <body class="mainframe bgcolor1" onload="init();">
@@ -43,10 +56,6 @@
 
     </c:forTokens>
 </h2>
-
-<c:if test="${model.isIndexBeingCreated}">
-    <p class="warning"><fmt:message key="home.scan"/></p>
-</c:if>
 
 <%@ include file="homePager.jsp" %>
 
@@ -93,8 +102,8 @@
     <div class="albumThumb">
         <c:import url="coverArt.jsp">
             <c:param name="albumId" value="${album.id}"/>
-            <c:param name="caption1" value="${album.albumTitle}"/>
-            <c:param name="caption2" value="${album.artist}"/>
+            <c:param name="caption1" value="${fn:escapeXml(album.albumTitle)}"/>
+            <c:param name="caption2" value="${fn:escapeXml(album.artist)}"/>
             <c:param name="caption3" value="${caption3}"/>
             <c:param name="captionCount" value="${captionCount}"/>
             <c:param name="coverArtSize" value="${model.coverArtSize}"/>
