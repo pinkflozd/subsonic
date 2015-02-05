@@ -1,0 +1,19 @@
+# vim: ft=gitconfig
+# svn.gitconfig
+# EugeneKay/subsonic
+#
+# gitconfig settings for SVN upstream
+#
+# To use, copy these config entries into your repository's .git/config. Modify
+# the svn.authorsfile to point to the full path of the file referenced. You can
+# now use `git svn fetch` to re-create the git-svn metadata, and this should
+# re-use the existing git history. Good luck!
+#
+
+[svn-remote "svn"]
+        url = https://svn.code.sf.net/p/subsonic/code/
+        fetch = trunk:refs/remotes/trunk
+        branches = branches/*:refs/remotes/*
+        tags = tags/*:refs/remotes/tags/*
+[svn]
+        authorsfile = svn-authors.ini
