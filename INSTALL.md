@@ -1,3 +1,7 @@
+<!--
+# INSTALL.md
+# EugeneKay/subsonic
+-->
 Requirements
 ------------
 
