@@ -33,6 +33,4 @@ The official homepage of Subsonic can be found [here](http://www.subsonic.org/).
 Usage
 -----
 
-A WAR compiled from the latest tag is provided on the [Releases page](https://github.com/EugeneKay/subsonic/releases), which can be installed to a Tomcat webapps/ directory, and should "just work". If you wish, you can build Subsonic from these sources for yourself by playing along with the following instructions.
-
-Please see the [INSTALL document](https://github.com/EugeneKay/subsonic/blob/release/INSTALL.md) for instructions on building from source and installation.
+A WAR compiled from the latest tag is provided on the [Releases page](https://github.com/EugeneKay/subsonic/releases), which can be installed to a Tomcat webapps/ directory, and should "just work". Please see the [INSTALL document](https://github.com/EugeneKay/subsonic/blob/release/INSTALL.md) for instructions on building from source and installation.
