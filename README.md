@@ -26,62 +26,9 @@ This repository is maintained by [Eugene E. Kashpureff Jr](mailto:eugene@kashpur
 
 The official homepage of Subsonic can be found [here](http://www.subsonic.org/).
 
-Download
---------
+Usage
+-----
 
-A WAR of the latest tag is provided on the [Releases page](https://github.com/EugeneKay/subsonic/releases), which can be installed to a Tomcat webapps/ directory, and should "just work". If you wish, you can build Subsonic from these sources for yourself by playing along with the following instructions.
+A WAR compiled from the latest tag is provided on the [Releases page](https://github.com/EugeneKay/subsonic/releases), which can be installed to a Tomcat webapps/ directory, and should "just work". If you wish, you can build Subsonic from these sources for yourself by playing along with the following instructions.
 
-Building
---------
-
-First, make sure you have a relatively recent version of [Maven](http://maven.apache.org/) and a JDK. The 1.6.x and 1.7.x series of OpenJDK and the official Oracle JDK(Java 6 and Java 7) have been tested to work. Ensure that `mvn` can be found in one of the directories listed in your $PATH and that $JAVA_HOME is set to your JDK:
-
-```
-$ which mvn
-/usr/local/bin/mvn
-$ echo $JAVA_HOME
-/usr/lib/jvm/java-1.7.0-openjdk.x86_64
-$
-```
-
-Now you can clone a copy of this repository and switch to the `release` branch if it is not automatically checked out:
-
-```
-$ git clone git://github.com/EugeneKay/subsonic.git
-$ cd subsonic
-$ git checkout release
-$
-```
-
-At this point you are ready to build the basic Subsonic WAR. The maintainer of this repository does not use any of the other build targets (Windows EXE installer, Android app, standalone RPM, etc), and documentation for them is only provided as contributed by others (Pull Requests welcomed).
-
-```
-$ mvn package
-<lots of buildspam>
-[INFO] Building war: /path/to/repo/subsonic/subsonic-main/target/subsonic.war
-<more buildspam>
-$
-```
-
-### Instructions for Tomcat
-
-You can now copy this WAR into your Tomcat server's webapps/ directory and deploy it from the Tomcat Manager. If you are feeling adventurous you can attempt to install the Official Subsonic Windows application and then switch the provided WAR with the one you just built, but the author has not attempted this.
-
-```
-$ cp subsonic-main/target/subsonic.war /var/lib/tomcat6/webapps/
-$
-```
-
-### Instruction for building a package for Debian and Ubuntu
-
-The following commands will build and install Subsonic on Debian and Ubuntu. You can probably substitute rpm for debian and the corresponding rpm installing command on rpm-based systems.
-
-```
-$ sudo apt-get install openjdk-7-jdk lintian maven
-$ mvn package
-$ mvn -P full -pl subsonic-booter -am install
-$ mvn -P full -pl subsonic-installer-debian/ -am install
-$ sudo dpkg -i ./subsonic-installer-debian/target/subsonic-*.deb
-```
-
-Good luck!
+Please see the [INSTALL document](https://github.com/EugeneKay/subsonic/blob/release/INSTALL.md) for instructions on building from source and installation.
