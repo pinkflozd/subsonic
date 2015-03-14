@@ -133,6 +133,7 @@
                 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" name="lifetimeForm">
                     <input type="hidden" name="cmd" value="_s-xclick">
                     <input type="hidden" name="hosted_button_id" value="RDHD4QKYSAYK8">
+                    <input type="hidden" name="lc" value="US">
                 </form>
                 <a onclick="document.lifetimeForm.submit()" class="button special icon fa-arrow-right">Continue to PayPal</a>
             </section>
@@ -144,6 +145,9 @@
                     For commercial use, please <a href="mailto:mail@subsonic.org">contact us</a> for licensing options. </p>
 
                 <p><a href="faq.jsp">Other payment alternatives</a> are also available.</p>
+
+                <p>Want to give an extra contribution to the project? <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=G9LP3DHYDVG6J">Donations</a>
+                    are much appreciated!</p>
 
                 <p>If you have any questions, feel free to send an email to <a href="mailto:mail@subsonic.org">mail@subsonic.org</a></p>
             </section>
