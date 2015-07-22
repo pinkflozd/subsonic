@@ -72,7 +72,7 @@ public class HomeController extends ParameterizableViewController {
             return new ModelAndView(new RedirectView("gettingStarted.view"));
         }
         int listOffset = getIntParameter(request, "listOffset", 0);
-        String listType = getStringParameter(request, "listType", "random");
+        String listType = getStringParameter(request, "listType", "recent");
 
         MusicFolder selectedMusicFolder = settingsService.getSelectedMusicFolder(user.getUsername());
         List<MusicFolder> musicFolders = settingsService.getMusicFoldersForUser(user.getUsername(),
