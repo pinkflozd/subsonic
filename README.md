@@ -17,9 +17,13 @@ If you have constrained bandwidth, you may set an upper limit for the bitrate of
 In addition to being a streaming media server, Subsonic works very well as a local jukebox. The intuitive web interface, as well as search and index facilities, are optimized for efficient browsing through large media libraries. Subsonic also comes with an integrated Podcast receiver, with many of the same features as you find in iTunes.
 
 Based on Java technology, Subsonic runs on most platforms, including Windows, Mac, Linux and Unix variants.
-GPL
 
-Subsonic is open-source software licensed under GPL. 
+
+License
+-------
+
+Subsonic is free software and licensed under the [GNU General Public License version 3](http://www.gnu.org/copyleft/gpl.html).
+
 
 About
 -----
