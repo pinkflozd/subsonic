@@ -7,7 +7,7 @@ Requirements
 
   * Recent version of [Maven](http://maven.apache.org/). 
   * A JDK installation. 1.7.x series of OpenJDK or Oracle JDK 7+ should work. 
-  * Optional: lintian, for .deb package
+  * Optional: lintian and fakeroot, for .deb package
   * Test as follows:
 
 ```
