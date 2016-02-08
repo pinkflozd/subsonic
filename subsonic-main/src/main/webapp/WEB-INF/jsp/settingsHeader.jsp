@@ -9,7 +9,7 @@
     </script>
 </c:if>
 
-<c:set var="categories" value="${param.restricted ? 'personal password player share' : 'musicFolder general advanced personal user player network share dlna sonos transcoding podcast'}"/>
+<c:set var="categories" value="${param.restricted ? 'personal password player share' : 'musicFolder general advanced personal user player network share dlna sonos transcoding internetRadio podcast'}"/>
 <h1><i class="fa fa-cog fa-lg icon"></i>&nbsp;&nbsp;<fmt:message key="settingsheader.title"/></h1>
 
 <h2>
