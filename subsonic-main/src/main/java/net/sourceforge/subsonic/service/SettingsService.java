@@ -1253,6 +1253,7 @@ public class SettingsService {
         settings.setNowPlayingAllowed(true);
         settings.setAutoHidePlayQueue(true);
         settings.setShowSideBar(false);
+        settings.setShowIndexInSideBar(false);
         settings.setShowArtistInfoEnabled(true);
         settings.setViewAsList(false);
         settings.setQueueFollowingSongs(true);
