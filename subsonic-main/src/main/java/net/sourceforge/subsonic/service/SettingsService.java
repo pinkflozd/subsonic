@@ -1043,6 +1043,15 @@ public class SettingsService {
         return getAllMusicFolders(false, false);
     }
 
+    public MusicFolder getMusicFolderByPath(String path) {
+        for (MusicFolder musicFolder : getAllMusicFolders()) {
+            if (musicFolder.getPath().getPath().equals(path)) {
+                return musicFolder;
+            }
+        }
+        return null;
+    }
+
     /**
      * Returns all music folders.
      *
