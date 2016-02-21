@@ -1391,6 +1391,10 @@ public class SettingsService {
         return getString(KEY_VIDEO_CONVERSION_DIRECTORY, DEFAULT_VIDEO_CONVERSION_DIRECTORY);
     }
 
+    public void setVideoConversionDirectory(String dir) {
+        setString(KEY_VIDEO_CONVERSION_DIRECTORY, dir);
+    }
+
     public String getLocalIpAddress() {
         return localIpAddress;
     }
