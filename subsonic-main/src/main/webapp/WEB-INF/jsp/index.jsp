@@ -35,7 +35,7 @@
             width: ${model.showRight ? 200 : 0}px;
         }
         #playQueue {
-            height: ${model.autoHidePlayQueue ? 95 : 250}px;
+            height: ${model.autoHidePlayQueue ? 95 : 500}px;
             width:100%;
             border-top: 1px solid rgba(0, 0, 0, 0.1)
         }
