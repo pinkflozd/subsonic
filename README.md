@@ -24,6 +24,10 @@ License
 
 Subsonic is free software and licensed under the [GNU General Public License version 3](http://www.gnu.org/copyleft/gpl.html).
 
+The [Upstream Project](http://www.subsonic.org/pages/premium.jsp) offers a "Subsonic Premium" license to enable all features of their distribution. The code in this repository and associated binaries do not require nor accept a license key.
+
+If you wish to thank the maintainer of this repository, please consider a donation to the [Electronic Frontier Foundation](https://supporters.eff.org/donate).
+
 
 About
 -----
