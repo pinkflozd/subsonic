@@ -657,20 +657,15 @@ public class PlayQueueService {
             String streamUrl = url.replaceFirst("/dwr/.*", "/stream?player=" + player.getId() + "&id=" + file.getId() + "&auth=" + file.getHash());
             String coverArtUrl = url.replaceFirst("/dwr/.*", "/coverArt.view?id=" + file.getId() + "&auth=" + file.getHash());
 
-            String remoteStreamUrl = settingsService.rewriteRemoteUrl(streamUrl);
-            String remoteCoverArtUrl = settingsService.rewriteRemoteUrl(coverArtUrl);
-
             // Rewrite URLs in case we're behind a proxy.
             if (settingsService.isRewriteUrlEnabled()) {
                 String referer = request.getHeader("referer");
                 albumUrl = StringUtil.rewriteUrl(albumUrl, referer);
                 streamUrl = StringUtil.rewriteUrl(streamUrl, referer);
-
-                // And them for good measure.
-                coverArtUrl = StringUtil.rewriteUrl(coverArtUrl, referer);
-                remoteStreamUrl = StringUtil.rewriteUrl(remoteStreamUrl, referer);
-                remoteCoverArtUrl = StringUtil.rewriteUrl(remoteCoverArtUrl, referer);
             }
+
+            String remoteStreamUrl = settingsService.rewriteRemoteUrl(streamUrl);
+            String remoteCoverArtUrl = settingsService.rewriteRemoteUrl(coverArtUrl);
 
             String format = formatFormat(player, file);
             String username = securityService.getCurrentUsername(request);
@@ -713,57 +708,5 @@ public class PlayQueueService {
 
     private Player getCurrentPlayer(HttpServletRequest request, HttpServletResponse response) {
         return playerService.getPlayer(request, response);
-    }
-
-    public void setPlayerService(PlayerService playerService) {
-        this.playerService = playerService;
-    }
-
-    public void setMediaFileService(MediaFileService mediaFileService) {
-        this.mediaFileService = mediaFileService;
-    }
-
-    public void setLastFmService(LastFmService lastFmService) {
-        this.lastFmService = lastFmService;
-    }
-
-    public void setJukeboxService(JukeboxService jukeboxService) {
-        this.jukeboxService = jukeboxService;
-    }
-
-    public void setTranscodingService(TranscodingService transcodingService) {
-        this.transcodingService = transcodingService;
-    }
-
-    public void setSettingsService(SettingsService settingsService) {
-        this.settingsService = settingsService;
-    }
-
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
-    }
-
-    public void setRatingService(RatingService ratingService) {
-        this.ratingService = ratingService;
-    }
-
-    public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
-    }
-
-    public void setPodcastService(PodcastService podcastService) {
-        this.podcastService = podcastService;
-    }
-
-    public void setMediaFileDao(MediaFileDao mediaFileDao) {
-        this.mediaFileDao = mediaFileDao;
-    }
-
-    public void setPlayQueueDao(PlayQueueDao playQueueDao) {
-        this.playQueueDao = playQueueDao;
-    }
-
-    public void setPlaylistService(PlaylistService playlistService) {
-        this.playlistService = playlistService;
     }
 }
